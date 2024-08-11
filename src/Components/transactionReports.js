@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { BASE_URL } from '../Contants/constants';
+import { format } from 'date-fns';
+
 
 
 const TransactionReport = ({ customers }) => {
@@ -68,7 +70,9 @@ const TransactionReport = ({ customers }) => {
                 <tbody>
                     {transactions.map(transaction => (
 <tr key={transaction.uniqueNumber} className="border-t">
-<td className="border p-2">{transaction.transactionDate}</td>
+<td className="border p-2">
+    {format(new Date(transaction.transactionDate), 'yyyy-MM-dd HH:mm:ss')}
+</td>
 <td className="border p-2">{transaction.uniqueNumber}</td>
 <td className="border p-2">{transaction.transactionType}</td>
 <td className="border p-2">{transaction.remarks}</td>

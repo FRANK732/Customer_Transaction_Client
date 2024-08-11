@@ -3,7 +3,6 @@ import axios from 'axios';
 import { BASE_URL } from '../Contants/constants';
 import { Toaster, toast } from 'sonner'
 
-
 const CustomerForm = ({ fetchCustomers }) => {
     const [customer, setCustomer] = useState({ 
         name: '', 
@@ -11,7 +10,7 @@ const CustomerForm = ({ fetchCustomers }) => {
         contactInfo: { email: '', phone: '' }, 
         currentBalance: 0 
     });
-
+    const [loading, setLoading] = useState(false);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -32,6 +31,7 @@ const CustomerForm = ({ fetchCustomers }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true); 
         try {
             await axios.post(`${BASE_URL}/CFPContrller/CreateCustomer`, customer);
             setCustomer({ 
@@ -41,17 +41,17 @@ const CustomerForm = ({ fetchCustomers }) => {
                 currentBalance: 0 
             });
             fetchCustomers();
-            toast.success('Successfully Created Customer')
+            toast.success('Customer created successfully');
         } catch (error) {
             console.error('Error saving customer:', error);
-            toast.error('Error Creating Customer');
+            toast.error('Error creating customer');
+        } finally {
+            setLoading(false); 
         }
     };
 
     return (
-        <>
-        <Toaster position='top-left' richColors/>
-         <form onSubmit={handleSubmit} className="max-w-md mx-auto bg-white p-8 shadow-lg rounded">
+        <form onSubmit={handleSubmit} className="max-w-md mx-auto bg-white p-8 shadow-lg rounded">
             <h2 className="text-2xl font-bold mb-4">Add Customer</h2>
             <input 
                 type="text" 
@@ -95,12 +95,15 @@ const CustomerForm = ({ fetchCustomers }) => {
                 required 
                 className="w-full p-2 mb-4 border border-gray-300 rounded"
             />
-            <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">
-                Save Customer
+            <button 
+                type="submit" 
+                className={`w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                disabled={loading}
+            >
+                {loading ? 'Saving...' : 'Save Customer'}
             </button>
+            <Toaster position="top-center" richColors/>
         </form>
-        </>
-       
     );
 };
 

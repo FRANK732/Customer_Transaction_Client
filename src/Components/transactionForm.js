@@ -13,6 +13,9 @@ const TransactionForm = ({ customers, fetchTransactions }) => {
         {key: 1, value: "Payment"}
     ]
 
+    const [message, setMessage] = useState('');
+    const [loading, setLoading] = useState(false);
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         if (name === 'remarks') {
@@ -40,6 +43,7 @@ const TransactionForm = ({ customers, fetchTransactions }) => {
     };
 
     const handleSubmit = async (e) => {
+        setLoading(true)
         e.preventDefault();
         try {
             await axios.post(`${BASE_URL}/CFPContrller/CreateTransaction`, transaction);
@@ -53,9 +57,6 @@ const TransactionForm = ({ customers, fetchTransactions }) => {
     };
 
     return (
-        <>
-                <Toaster position='top-right' richColors/>
-
         <form onSubmit={handleSubmit} className="max-w-md mx-auto bg-white p-8 shadow-lg rounded">
             <h2 className="text-2xl font-bold mb-4">Record Transaction</h2>
             <select 
@@ -99,14 +100,16 @@ const TransactionForm = ({ customers, fetchTransactions }) => {
                 name="remarks" 
                 placeholder="Remarks" 
                 value={transaction.remarks} 
+                disabled={loading}
                 onChange={handleInputChange} 
                 className="w-full p-2 mb-4 border border-gray-300 rounded"
             />
             <button type="submit" className="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600">
-                Add Transaction
+                {loading ? 'Adding...':'Add Transaction'}
             </button>
+            <Toaster position='top-right' richColors/>
+
         </form>
-        </>
     );
 };
 

@@ -4,7 +4,7 @@ import axios from 'axios';
 import CustomerForm from './Components/customerForm';
 import TransactionForm from './Components/transactionForm';
 import TransactionReport from './Components/transactionReports';
-import CustomerList from './Components/customerList';
+import CustomerDetails from './Components/customerDetails';
 import { BASE_URL } from './Contants/constants';
 
 function App() {
@@ -13,13 +13,12 @@ function App() {
   const fetchCustomers = async () => {
     try {
         const response = await axios.get(`${BASE_URL}/CFPContrller/GetAllCustomers`);
-        console.log(response.data); 
         setCustomers(response.data);
     } catch (error) {
         console.error('Error fetching customers:', error);
         setCustomers([]); 
     }
-};
+  };
 
   useEffect(() => {
       fetchCustomers();
@@ -27,20 +26,36 @@ function App() {
 
   return (
     <div className="App">
-      <h1 className="text-3xl font-bold mb-4">Customer Balance Platform</h1>
-      <div className="flex space-x-4">
-        <div className="w-1/2">
-            <CustomerForm fetchCustomers={fetchCustomers} />
+      <header className="bg-blue-600 text-white p-4 text-center">
+        <h1 className="text-3xl font-bold">Customer Balance Platform</h1>
+      </header>
+
+      <main className="p-8">
+        <section className="mb-8">
+          <div className="flex space-x-4">
+            <div className="w-1/2">
+            <CustomerDetails customers={customers} fetchCustomers={fetchCustomers} />
+
             </div>
             <div className="w-1/2">
-            <TransactionForm customers={customers} fetchTransactions={fetchCustomers} />
-            </div>
-</div>
+            <CustomerForm fetchCustomers={fetchCustomers} />
 
-            <CustomerList customers={customers} />
+            </div>
+          </div>
+        </section>
+
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="col-span-1">
+          <TransactionForm customers={customers} fetchTransactions={fetchCustomers} />
+
+          </div>
+          <div className="col-span-1">
             <TransactionReport customers={customers} />
+          </div>
+        </section>
+      </main>
     </div>
-    // <div className="App">
+     // <div className="App">
     //   <header className="App-header">
     //     <img src={logo} className="App-logo" alt="logo" />
     //     <p>
