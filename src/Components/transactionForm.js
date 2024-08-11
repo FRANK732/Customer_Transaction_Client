@@ -107,7 +107,7 @@ const TransactionForm = ({ customers, fetchTransactions }) => {
             <button type="submit" className="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600">
                 {loading ? 'Adding...':'Add Transaction'}
             </button>
-            <Toaster position='top-right' richColors/>
+            <Toaster position='top-center' richColors/>
 
         </form>
     );
