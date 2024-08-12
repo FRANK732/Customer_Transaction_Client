@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "../Contants/constants";
 import { format } from "date-fns";
+import { Toaster, toast } from "sonner";
+
 
 const TransactionReport = ({ customers }) => {
   const [transactions, setTransactions] = useState([]);
@@ -11,17 +13,28 @@ const TransactionReport = ({ customers }) => {
     endDate: "",
   });
 
+  const [loading, setLoading] = useState(false);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFilter({ ...filter, [name]: value });
   };
 
   const fetchReport = async (e) => {
+    setLoading(true);
     e.preventDefault();
-    const { customerId, startDate, endDate } = filter;
-    const url = `${BASE_URL}/CFPContrller/GenerateTransactionReport?customerId=${customerId}&startDate=${startDate}&endDate=${endDate}`;
-    const response = await axios.get(url);
-    setTransactions(response.data.transactions);
+    try{
+        const { customerId, startDate, endDate } = filter;
+        const url = `${BASE_URL}/CFPContrller/GenerateTransactionReport?customerId=${customerId}&startDate=${startDate}&endDate=${endDate}`;
+        const response = await axios.get(url);
+        setTransactions(response.data.transactions);
+    }catch{
+        toast.error("Failed to Fetch Transactions. Try Again ");
+
+    }finally{
+        setLoading(false);
+    }
+   
   };
 
   return (
@@ -36,7 +49,7 @@ const TransactionReport = ({ customers }) => {
             onChange={handleInputChange}
             className="p-2 border border-gray-300 rounded"
           >
-            <option value="">All Customers</option>
+            <option value="0">All Customers</option>
             {customers.map((customer) => (
               <option key={customer.customerID} value={customer.customerID}>
                 {customer.name}
@@ -104,6 +117,8 @@ const TransactionReport = ({ customers }) => {
           ))}
         </tbody>
       </table>
+      <Toaster position="top-center" richColors />
+
     </div>
   );
 };

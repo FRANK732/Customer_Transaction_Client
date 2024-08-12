@@ -92,6 +92,7 @@ const CustomerForm = ({ fetchCustomers }) => {
                 placeholder="Balance" 
                 value={customer.currentBalance} 
                 onChange={handleInputChange} 
+                min={0}
                 required 
                 className="w-full p-2 mb-4 border border-gray-300 rounded"
             />
