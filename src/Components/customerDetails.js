@@ -7,7 +7,7 @@ import { FiEdit2 } from "react-icons/fi";
 const CustomerDetails = ({ customers, fetchCustomers }) => {
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [isEditing, setIsEditing] = useState(false); // State to toggle between view and edit mode
+  const [isEditing, setIsEditing] = useState(false);
 
   const handleCustomerSelect = async (e) => {
     const customerId = e.target.value;
@@ -18,7 +18,7 @@ const CustomerDetails = ({ customers, fetchCustomers }) => {
           `${BASE_URL}/CFPContrller/GetCustomerById/${customerId}`
         );
         setSelectedCustomer(response.data);
-        setIsEditing(false); // Set to view mode when a new customer is selected
+        setIsEditing(false);
       } catch (error) {
         toast.error("Error fetching customer details");
         console.error("Error fetching customer details:", error);
@@ -67,8 +67,8 @@ const CustomerDetails = ({ customers, fetchCustomers }) => {
           updateData
         );
         toast.success("Customer updated successfully");
-        setIsEditing(false); // Switch back to view mode after updating
-        fetchCustomers(); // Optionally refresh the customer list after the update
+        setIsEditing(false);
+        fetchCustomers();
       } catch (error) {
         toast.error("Error updating customer");
         console.error("Error updating customer:", error);
