@@ -200,7 +200,7 @@ const CustomerDetails = ({ customers, fetchCustomers }) => {
                 <strong>Phone:</strong> {selectedCustomer.contactInfo.phone}
               </p>
               <p>
-                <strong>Current Balance:</strong> $
+                <strong>Current Balance:</strong> GHS-
                 {selectedCustomer.currentBalance.toFixed(2)}
               </p>
               <div className="mt-4">

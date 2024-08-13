@@ -1,27 +1,34 @@
-import React, { useState, useEffect } from 'react';
-import './App.css';
-import axios from 'axios';
-import CustomerForm from './Components/customerForm';
-import TransactionForm from './Components/transactionForm';
-import TransactionReport from './Components/transactionReports';
-import CustomerDetails from './Components/customerDetails';
-import { BASE_URL } from './Contants/constants';
+import React, { useState, useEffect } from "react";
+import "./App.css";
+import axios from "axios";
+import CustomerForm from "./Components/customerForm";
+import TransactionForm from "./Components/transactionForm";
+import TransactionReport from "./Components/transactionReports";
+import CustomerDetails from "./Components/customerDetails";
+import { BASE_URL } from "./Contants/constants";
+import { ClipLoader } from "react-spinners";
 
 function App() {
   const [customers, setCustomers] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const fetchCustomers = async () => {
     try {
-        const response = await axios.get(`${BASE_URL}/CFPContrller/GetAllCustomers`);
-        setCustomers(response.data);
+      setLoading(true);
+      const response = await axios.get(
+        `${BASE_URL}/CFPContrller/GetAllCustomers`
+      );
+      setCustomers(response.data);
     } catch (error) {
-        console.error('Error fetching customers:', error);
-        setCustomers([]); 
+      console.error("Error fetching customers:", error);
+      setCustomers([]);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-      fetchCustomers();
+    fetchCustomers();
   }, []);
 
   return (
@@ -31,31 +38,42 @@ function App() {
       </header>
 
       <main className="p-8">
-        <section className="mb-8">
-          <div className="flex space-x-4">
-            <div className="w-1/2">
-            <CustomerDetails customers={customers} fetchCustomers={fetchCustomers} />
-
-            </div>
-            <div className="w-1/2">
-            <CustomerForm fetchCustomers={fetchCustomers} />
-
-            </div>
+        {loading ? (
+          <div className="fixed inset-0 flex justify-center items-center">
+            <ClipLoader size={50} color={"#123abc"} loading={loading} />
           </div>
-        </section>
+        ) : (
+          <>
+            <section className="mb-8">
+              <div className="flex space-x-4">
+                <div className="w-1/2">
+                  <CustomerDetails
+                    customers={customers}
+                    fetchCustomers={fetchCustomers}
+                  />
+                </div>
+                <div className="w-1/2">
+                  <CustomerForm fetchCustomers={fetchCustomers} />
+                </div>
+              </div>
+            </section>
 
-        <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="col-span-1">
-          <TransactionForm customers={customers} fetchTransactions={fetchCustomers} />
-
-          </div>
-          <div className="col-span-1">
-            <TransactionReport customers={customers} />
-          </div>
-        </section>
+            <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="col-span-1">
+                <TransactionForm
+                  customers={customers}
+                  fetchTransactions={fetchCustomers}
+                />
+              </div>
+              <div className="col-span-1">
+                <TransactionReport customers={customers} />
+              </div>
+            </section>
+          </>
+        )}
       </main>
     </div>
-     // <div className="App">
+    // <div className="App">
     //   <header className="App-header">
     //     <img src={logo} className="App-logo" alt="logo" />
     //     <p>
