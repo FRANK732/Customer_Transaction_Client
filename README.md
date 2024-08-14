@@ -137,7 +137,9 @@
 
 - The application has been tested for typical scenarios. However, you can run additional tests to explore edge cases.
 
-
+## **GitHub Links**
+- **Backend** - https://github.com/FRANK732/Customer_Transaction_Platform
+- **FrontEnd** - https://github.com/FRANK732/Customer_Transaction_Client
 ## Contact
 
 If you have any questions or issues, feel free to contact:
