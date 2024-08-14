@@ -44,6 +44,11 @@
    Add-Migration initial
    ```
 8. This generate migration file after run command in 3
+9. **NB** Run command to build the Project
+    ```bash
+    dotnet build
+    ```
+    
    
    
 
