@@ -3,11 +3,14 @@ import axios from "axios";
 import { BASE_URL } from "../Contants/constants";
 import { Toaster, toast } from "sonner";
 import { FiEdit2 } from "react-icons/fi";
+import Modal from "./modal";
 
 const CustomerDetails = ({ customers, fetchCustomers }) => {
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [loading, setLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+
 
   const handleCustomerSelect = async (e) => {
     const customerId = e.target.value;
@@ -45,6 +48,7 @@ const CustomerDetails = ({ customers, fetchCustomers }) => {
         console.error("Error deleting customer:", error);
       } finally {
         setLoading(false);
+        setShowModal(false); 
       }
     }
   };
@@ -205,7 +209,7 @@ const CustomerDetails = ({ customers, fetchCustomers }) => {
               </p>
               <div className="mt-4">
                 <button
-                  onClick={handleDeleteCustomer}
+                  onClick={()=> setShowModal(true)}
                   className="bg-red-500 text-white p-2 rounded hover:bg-red-600"
                 >
                   Delete
@@ -215,6 +219,11 @@ const CustomerDetails = ({ customers, fetchCustomers }) => {
           )}
         </div>
       )}
+       <Modal
+        show={showModal}
+        onClose={() => setShowModal(false)}
+        onConfirm={handleDeleteCustomer}
+      />
     </div>
   );
 };
