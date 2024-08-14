@@ -4,7 +4,6 @@ import { BASE_URL } from "../Contants/constants";
 import { format } from "date-fns";
 import { Toaster, toast } from "sonner";
 
-
 const TransactionReport = ({ customers }) => {
   const [transactions, setTransactions] = useState([]);
   const [filter, setFilter] = useState({
@@ -23,18 +22,16 @@ const TransactionReport = ({ customers }) => {
   const fetchReport = async (e) => {
     setLoading(true);
     e.preventDefault();
-    try{
-        const { customerId, startDate, endDate } = filter;
-        const url = `${BASE_URL}/CFPContrller/GenerateTransactionReport?customerId=${customerId}&startDate=${startDate}&endDate=${endDate}`;
-        const response = await axios.get(url);
-        setTransactions(response.data.transactions);
-    }catch{
-        toast.error("Failed to Fetch Transactions. Try Again ");
-
-    }finally{
-        setLoading(false);
+    try {
+      const { customerId, startDate, endDate } = filter;
+      const url = `${BASE_URL}/CFPContrller/GenerateTransactionReport?customerId=${customerId}&startDate=${startDate}&endDate=${endDate}`;
+      const response = await axios.get(url);
+      setTransactions(response.data.transactions);
+    } catch {
+      toast.error("Failed to Fetch Transactions. Try Again ");
+    } finally {
+      setLoading(false);
     }
-   
   };
 
   return (
@@ -102,10 +99,7 @@ const TransactionReport = ({ customers }) => {
           {transactions.map((transaction) => (
             <tr key={transaction.uniqueNumber} className="border-t">
               <td className="border p-2">
-                {format(
-                  new Date(transaction.transactionDate),
-                  "yyyy-MM-dd HH:mm:ss"
-                )}
+                {format(new Date(transaction.transactionDate), "yyyy-MM-dd")}
               </td>
               <td className="border p-2">{transaction.uniqueNumber}</td>
               <td className="border p-2">{transaction.transactionType}</td>
@@ -118,7 +112,6 @@ const TransactionReport = ({ customers }) => {
         </tbody>
       </table>
       <Toaster position="top-center" richColors />
-
     </div>
   );
 };

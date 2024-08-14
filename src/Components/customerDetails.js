@@ -11,9 +11,9 @@ const CustomerDetails = ({ customers, fetchCustomers }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
-
   const handleCustomerSelect = async (e) => {
     const customerId = e.target.value;
+    console.log("EE", e);
     if (customerId) {
       setLoading(true);
       try {
@@ -48,12 +48,13 @@ const CustomerDetails = ({ customers, fetchCustomers }) => {
         console.error("Error deleting customer:", error);
       } finally {
         setLoading(false);
-        setShowModal(false); 
+        setShowModal(false);
       }
     }
   };
 
-  const handleUpdateCustomer = async () => {
+  const handleUpdateCustomer = async (e) => {
+    e.preventDefault();
     if (selectedCustomer) {
       setLoading(true);
       try {
@@ -131,63 +132,67 @@ const CustomerDetails = ({ customers, fetchCustomers }) => {
           </div>
           {isEditing ? (
             // Edit Mode
-            <div>
-              <div className="mb-2">
-                <label className="block text-sm font-medium">Name:</label>
-                <input
-                  type="text"
-                  name="name"
-                  value={selectedCustomer.name}
-                  onChange={handleChange}
-                  className="w-full p-2 border border-gray-300 rounded"
-                />
+            <form onSubmit={handleUpdateCustomer}>
+              <div>
+                <div className="mb-2">
+                  <label className="block text-sm font-medium">Name:</label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={selectedCustomer.name}
+                    onChange={handleChange}
+                    className="w-full p-2 border border-gray-300 rounded"
+                  />
+                </div>
+                <div className="mb-2">
+                  <label className="block text-sm font-medium">
+                    Description:
+                  </label>
+                  <textarea
+                    name="description"
+                    value={selectedCustomer.description}
+                    onChange={handleChange}
+                    className="w-full p-2 border border-gray-300 rounded"
+                  />
+                </div>
+                <div className="mb-2">
+                  <label className="block text-sm font-medium">Email:</label>
+                  <input
+                    type="email"
+                    name="email"
+                    required
+                    value={selectedCustomer.contactInfo.email}
+                    onChange={handleContactInfoChange}
+                    className="w-full p-2 border border-gray-300 rounded"
+                  />
+                </div>
+                <div className="mb-2">
+                  <label className="block text-sm font-medium">Phone:</label>
+                  <input
+                    type="text"
+                    name="phone"
+                    required
+                    value={selectedCustomer.contactInfo.phone}
+                    onChange={handleContactInfoChange}
+                    className="w-full p-2 border border-gray-300 rounded"
+                  />
+                </div>
+                <div className="mt-4">
+                  <button
+                    // onClick={handleUpdateCustomer}
+                    className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 mr-2"
+                  >
+                    Save
+                  </button>
+                  <button
+                    onClick={() => setIsEditing(false)}
+                    className="bg-gray-500 text-white p-2 rounded hover:bg-gray-600"
+                  >
+                    Cancel
+                  </button>
+                </div>
               </div>
-              <div className="mb-2">
-                <label className="block text-sm font-medium">
-                  Description:
-                </label>
-                <textarea
-                  name="description"
-                  value={selectedCustomer.description}
-                  onChange={handleChange}
-                  className="w-full p-2 border border-gray-300 rounded"
-                />
-              </div>
-              <div className="mb-2">
-                <label className="block text-sm font-medium">Email:</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={selectedCustomer.contactInfo.email}
-                  onChange={handleContactInfoChange}
-                  className="w-full p-2 border border-gray-300 rounded"
-                />
-              </div>
-              <div className="mb-2">
-                <label className="block text-sm font-medium">Phone:</label>
-                <input
-                  type="text"
-                  name="phone"
-                  value={selectedCustomer.contactInfo.phone}
-                  onChange={handleContactInfoChange}
-                  className="w-full p-2 border border-gray-300 rounded"
-                />
-              </div>
-              <div className="mt-4">
-                <button
-                  onClick={handleUpdateCustomer}
-                  className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 mr-2"
-                >
-                  Save
-                </button>
-                <button
-                  onClick={() => setIsEditing(false)}
-                  className="bg-gray-500 text-white p-2 rounded hover:bg-gray-600"
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
+            </form>
           ) : (
             // View Mode
             <div>
@@ -209,7 +214,7 @@ const CustomerDetails = ({ customers, fetchCustomers }) => {
               </p>
               <div className="mt-4">
                 <button
-                  onClick={()=> setShowModal(true)}
+                  onClick={() => setShowModal(true)}
                   className="bg-red-500 text-white p-2 rounded hover:bg-red-600"
                 >
                   Delete
@@ -219,7 +224,7 @@ const CustomerDetails = ({ customers, fetchCustomers }) => {
           )}
         </div>
       )}
-       <Modal
+      <Modal
         show={showModal}
         onClose={() => setShowModal(false)}
         onConfirm={handleDeleteCustomer}
